@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useEffect,useState} from "react";
 import RouteSelector from "../routeSelector/Routeselector";
 import SeatSelection from "../SeatSelection/SeatSelection";
 import PaymentTab from "../PaymentTab/PaymentTab";
@@ -9,6 +9,14 @@ import Subscription from "../Subscription/Subscription";
 import { useHistory } from "react-router-dom";
 import { Box, Grid, Typography } from "@mui/material";
 import JJlogo from "../../images/JJTlogo.png";
+import StripeContainer from "../PaymentTab/StripeContainer";
+import axios from 'axios'
+import jwt_decode from "jwt-decode";
+import constants from "../../constant";
+import truncateEthAddress from 'truncate-eth-address'
+import Copy from '../../images/copy.png'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function RouteSelection({ history }) {
   const handleUserIcon = (e) => {
@@ -29,9 +37,70 @@ export default function RouteSelection({ history }) {
     e.preventDefault();
     history.push("/routes");
   };
+  // const userData = (JSON.parse(localStorage.getItem('paymentData')));
+
+  const [address, setAddress] = useState(null)
+  const [userDoc, setUserDoc] = useState(null)
+
+    useEffect(()=>{
+      const getUserBalance = async()=>{
+        try {
+          const tok = sessionStorage.getItem('authToken')
+          if(tok){
+            const decoded = jwt_decode(tok)
+            setUserDoc(decoded?.doc)
+                  const getBalance = await axios.post(`${constants.baseURL}/token/balance`,{
+                    userAddress:decoded.doc.publicKey
+                  })
+                  setAddress(getBalance?.data?.message);
+          }
+   
+        } catch (error) {
+          console.log(error.message);
+        }
+      }
+      getUserBalance()
+    },[])
+
+
+
+  const copyToClipboard = () => {
+    const textField = document.createElement('textarea');
+    textField.innerText = userDoc?.publicKey;
+    document.body.appendChild(textField);
+    textField.select();
+    document.execCommand('copy');
+    textField.remove();
+    // setCopied(true);
+
+
+    toast.success('Copied!', {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      });
+  };
+
 
   return (
     <div className="container">
+      <ToastContainer
+position="top-center"
+autoClose={5000}
+hideProgressBar={false}
+newestOnTop={false}
+closeOnClick
+rtl={false}
+pauseOnFocusLoss
+draggable
+pauseOnHover
+theme="light"
+/>
       <div>
         <nav className="mb-4 navbar navbar-expand-lg navbar-dark bg-unique hm-gradient">
           <div
@@ -106,10 +175,10 @@ export default function RouteSelection({ history }) {
         </nav>
       </div>
       <div>
-        <div style={{ display: "flex", padding: "0px 0px" }}>
+        <div className="flex-container-duplicate">
           <ul
             className="nav nav-pills" 
-            style={{ display: "flex", width: "50%",marginTop:122 }}
+            style={{ display: "flex", width: "50%"}}
           >
             <li className="nav-item">
               <a
@@ -121,8 +190,6 @@ export default function RouteSelection({ history }) {
                 License Plan
               </a>
             </li>
-
-            
             <li className="nav-item">
               <a
                 className="nav-link"
@@ -130,58 +197,27 @@ export default function RouteSelection({ history }) {
                 href="#menu3"
                 style={{ color: "#fff" }}
               >
-                transactions
+                Transactions
               </a>
             </li>
           </ul>
-          <div
-            style={{
-              width: "60%",
-              display: "flex",
-              justifyContent: "flex-end",
-              alignItems: "flex-end",
-            }}
-          >
-          <Grid item   > 
-            <Box
-              width={"25%"}
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <img src={JJlogo} style={{ width: "70px" }} />
-              <Typography
-                fontSize="25px"
-                color="white"
-                textTransform="uppercase"
-                fontFamily="sans-serif"
-              >
-                JJT
-              </Typography>
-              <button
-                style={{
-                  backgroundColor: "rgb(105, 105, 105)",
-                  width: "100px",
-                  height: "50px",
-                  borderRadius: "30px",
-                  border: "none",
-                }}
-                onClick={() => history.push("/JJT")}
-              >
-                <Typography
-                  fontSize="15px"
-                  fontFamily="sans-serif"
-                  color="white"
-                >
-                  850.25$
-                </Typography>
-              </button>
-            </Box>
-            </Grid>
+          <div>
+            <div className="flex-second-container">
+              <img src={JJlogo} alt="logo" style={{width:'50px',marginLeft:"20px"}}/>
+            <div>
+           <p className="blue right"> UserAddress: <span className="address black"> {userDoc?.publicKey && truncateEthAddress(userDoc?.publicKey)}</span> 
+           <span onClick={copyToClipboard}>
+            <img src={Copy} alt="copyClipboard" style={{width:'20px',cursor:'pointer',marginLeft:'5px'}}/>
+           </span>
+           </p>
+           <p className="jjtToken right"> {address}JJT 
+           {/* (<span>{userDoc?.amount && parseFloat(userDoc?.amount)?.toFixed(2)}$</span>) */}
+           </p>
+            </div>
+            
+            </div>
           </div>
+          
         </div>
 
         <div className="tab-content">
@@ -193,6 +229,9 @@ export default function RouteSelection({ history }) {
           </div>
           <div className="tab-pane container fade mn-box" id="menu2">
             <PaymentTab />
+          </div>
+          <div className="tab-pane container fade mn-box" id="menu2">
+            <StripeContainer />
           </div>
           <div className="tab-pane container fade mn-box" id="menu3">
             <Transacton />

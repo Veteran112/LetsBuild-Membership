@@ -1,10 +1,36 @@
-import React from "react";
+import React,{useEffect,useState} from "react";
 import { Grid, Box, Typography, Card, Button } from "@mui/material";
 import JJlogo from "../../images/JJTlogo.png";
 import Send from "../../images/send.png";
 import Recive from "../../images/recive.png";
+import axios from 'axios'
+import constants from "../../constant";
+import jwt_decode from "jwt-decode";
 
 function JJT() {
+
+const [address, setAddress] = useState(null)
+
+
+const tok = sessionStorage.getItem('authToken')
+const decoded = jwt_decode(tok)
+
+  useEffect(()=>{
+    const getUserBalance = async()=>{
+
+      try {
+        const getBalance = await axios.post(`${constants.baseURL}/token/balance`,{
+          userAddress:decoded.doc.publicKey
+        })
+        setAddress(getBalance?.data?.message);
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
+    getUserBalance()
+  },[])
+
+
   return (
     <Grid container>
       <Grid item>
@@ -21,12 +47,12 @@ function JJT() {
           </Grid>
           <Grid item display="flex" justifyContent="center" width="100%">
             <Typography variant="h3" fontFamily="sans-serif" color="#007bff">
-              66.856732.JJT
+              {address}JJT
             </Typography>
           </Grid>
           <Grid item display="flex" justifyContent="center" width="100%">
             <Typography variant="h6" fontFamily="sans-serif" color="#fff">
-              71.50 USD
+              {decoded?.membership?.paidAmount} USD
             </Typography>
           </Grid>
 

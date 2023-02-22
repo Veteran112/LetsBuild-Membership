@@ -3,7 +3,7 @@ import Card from "react-credit-cards";
 import "./PaymentTab.css";
 import jwt_decode from "jwt-decode";
 import { useParams } from "react-router-dom";
-
+import constants from "../../constant";
 import axios from 'axios'
 
 import {
@@ -16,7 +16,7 @@ import "react-credit-cards/es/styles-compiled.css";
 
 
 export function updateMembership(userId, name) {
-  let apiUrl = 'http://localhost:7008/membership/update'
+  let apiUrl = `${constants.baseURL}/membership/update`
   return axios.post(apiUrl, {
     userId: userId,
     membershipName: name,
@@ -273,7 +273,7 @@ export default class App extends React.Component {
                   <p className="hdng"> Licence Price </p>{" "}
                   <p className="hdng"> Tax </p> 
                     <hr className="hr3" />{" "}
-                  <p className="hdng"> Toal Sum </p>{" "}
+                  <p className="hdng"> Total Sum </p>{" "}
                 </div>{" "}
                 <div className="col-6">
                   <p className="usrName"> {name} </p>{" "}

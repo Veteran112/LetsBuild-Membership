@@ -39,3 +39,47 @@
   
   
  
+.flex-container-duplicate{
+    display: flex;
+    align-items: center;
+    justify-content: space-between !important;
+    margin-top: 120px;
+    width: 100% !important;
+}
+
+.flex-second-container{
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    background-color: rgba(251, 251, 251, 0.507);
+    padding:5px 20px;
+    border-radius: 10px;
+    color: black;
+}
+
+.blue{
+    color: rgb(0, 7, 110);
+}
+
+.black{
+    color: black !important;
+}
+
+.right{
+    text-align: right;
+    /* letter-spacing: 1px; */
+}
+
+.flex-second-container >div{
+    width: 250px;
+}
+
+.address{
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.jjtToken{
+    font-size: 16px;
+    font-weight: 700;
+}

@@ -8,8 +8,11 @@ import { useHistory } from "react-router-dom";
 import PaymentSelector from "../PaymentTab/PaymentSelector";
 import Done2 from "../../images/bluedone1.png";
 import Switch from "@mui/material/Switch";
+import moment from "moment";
 
 import jwt_decode from 'jwt-decode'
+import Axios from "axios";
+import constants from "../../constant";
 
 function Subscription() {
   const label = { inputProps: { "aria-label": "Switch demo" } };
@@ -17,12 +20,40 @@ function Subscription() {
 
   const [user, setUser] = React.useState({})
 
-	React.useEffect(() => {
-		const tok = sessionStorage.getItem('authToken')
-		const decoded = jwt_decode(tok)
-		setUser(decoded.doc)
-	}, [])
+	// React.useEffect(() => {
+	// 	const tok = sessionStorage.getItem('authToken')
+	// 	const decoded = jwt_decode(tok)
+	// 	setUser(decoded.doc)
+	// }, [])
 
+  const tok = sessionStorage.getItem('authToken')
+  const decoded = jwt_decode(tok)
+ React.useEffect(() => {
+//    if(decoded){
+//     setUser(decoded?.doc)
+//     // console.log( JSON.parse(window.localStorage.getItem('paymentData')));
+//     // return JSON.parse(window.localStorage.getItem('paymentData'))
+   
+//    }else{
+//     setUser(JSON.parse(window.localStorage.getItem('paymentData')))
+// //  return decoded?.doc
+//    }
+
+   const getData = async()=>{
+try {
+  const {data} = await Axios.post(`${constants.baseURL}/get-user`,{
+    userId:decoded?.doc?._id
+  })
+  setUser(data?.data);
+} catch (error) {
+  console.log(error);
+}
+   }
+   getData()
+   
+  }, [])
+
+  // console.log(user);
 
 
   const billingtypeChange = (event) => {
@@ -34,7 +65,12 @@ function Subscription() {
   let history = useHistory();
   return (
     <>
-    <Box mb={"-55px"}  mt={"16px"} mr={2.4}> 
+   {
+
+   user?.membership?
+<div>
+
+<Box mb={"-55px"}  mt={"16px"} mr={2.4}> 
     <Grid item display="flex" justifyContent="flex-end" alignItems={"center"}  >
       <Typography
         fontSize="14px"
@@ -112,7 +148,7 @@ function Subscription() {
                 </Grid>
               </Grid>
             </Box>
-            { isAnnual && <>
+            { isAnnual ? <>
             <Grid item>
               <Typography
                 fontSize="16px"
@@ -134,18 +170,28 @@ function Subscription() {
                 You save $5.88
               </Typography>
             </Grid>
-            </> }
+
+
+            </>:
+            <div style={{height:'55px'}}>
+            <Grid></Grid>
+            <Grid></Grid>
+            </div>
+          
+          }
             <Grid item display="flex" justifyContent="center" mt={1}>
               <Button
                 sx={{
                   width: "90%",
-                  backgroundColor: "#007fed",
-                  color: "white",
+                  backgroundColor: 
+                  user?.membership?.name==="Basic"? "white" : "grey",
+                  color: user?.membership?.name==="Basic"?"black":"white",
                   fontwwight: "700",
-                  border: "1px solid #007fed",
+                  border:user?.membership?.name==="Basic"?"1px solid black": "1px solid none",
                   cursor: "pointer",
                   marginTop: "10px",
-                  "&:hover": { backgroundColor: "#007fed" },
+                  "&:hover": { backgroundColor: 
+                    user?.membership?.name==="Basic"? "#007fed" : "grey" },
                 }}
                 onClick={() => {
                   if (!(user.membership && (user.membership.month == 4.99 || user.membership.annual == 4.5))) {
@@ -154,11 +200,25 @@ function Subscription() {
                     history.push(`/payment`)
                   }
                 }}
+                disabled={
+                  user?.membership?.name==="Basic"
+                }
               >
-                <Typography textTransform="none" fontwwight={"bold"}>
+                <Typography textTransform="none" fontwwight={"bold"} style={{color:user?.membership?.name==="Basic"?"black": "white"}}>
+              
+
                   { !user.membership && "Upgrade" }
-                  { user.membership && (user.membership.month > 4.99 || user.membership.annual > 4.5)  && "Downgrade" }
-                  { user.membership && (user.membership.month == 4.99 || user.membership.annual == 4.5)  && "Current Plan" }
+                  {
+                    user?.membership?.name==="Basic"?"":
+                  
+
+                   user.membership && (user.membership.month > 4.99 || user.membership.annual > 4.5)  && "Downgrade" }
+                 
+                  {
+        user?.membership?.name==="Basic" && <span style={{display:'inline-flex'}}>   Renew on &nbsp; {moment(user?.renew).format("DD-MM-YYYY") }  </span>
+}
+
+
                 </Typography>
               </Button>
             </Grid>
@@ -178,6 +238,7 @@ function Subscription() {
               <img
                 src={Done2}
                 style={{ width: "15px", marginTop: -53, marginLeft: 13 }}
+                alt="imagea"
               />
 
               <Typography
@@ -302,7 +363,7 @@ function Subscription() {
                 </Grid>
               </Grid>
             </Box>
-            { isAnnual && <>
+            { isAnnual ? <>
             <Grid item>
               <Typography
                 fontSize="16px"
@@ -324,24 +385,60 @@ function Subscription() {
                 You save $13.08
               </Typography>
             </Grid>
-            </> }
+            </> :
+            <div style={{height:'55px'}}>
+            <Grid></Grid>
+            <Grid></Grid>
+            </div>
+            
+            }
             <Grid item>
               <Grid item display="flex" justifyContent="center" mt={1}>
                 <Button
                   sx={{
                     width: "90%",
-                    backgroundColor: "#5dc26a",
-                    color: "white",
+                    backgroundColor:
+                    
+                    user?.membership?.name==="Plus"?"white":
+                    user.membership && (user.membership.month < 9.99 || user.membership.annual < 8.9)  && "#5dc26a" ||
+                    user.membership && (user.membership.month > 9.99 || user.membership.annual > 8.9)  && "grey" 
+                    ,
+                    color: user?.membership?.name==="Plus"?"black":"white",
                     fontwwight: "700",
-                    border: "1px solid #5dc26a",
+                    border:user?.membership?.name==="Plus"?"1px solid black": "1px solid none",
                     cursor: "pointer",
                     marginTop: "10px",
-                    "&:hover": { backgroundColor: "#2bd661" },
+                    "&:hover": { backgroundColor: 
+                      user?.membership?.name==="Plus"?"#007fed":
+                      user.membership && (user.membership.month < 9.99 || user.membership.annual < 8.9)  && "#5dc26a" ||
+                      user.membership && (user.membership.month > 9.99 || user.membership.annual > 8.9)  && "grey" 
+                    },
                   }}
-                  onClick={() => history.push(`/payment?plan=plus&isAnnual=${isAnnual}`)}
+                  // onClick={() => history.push(`/payment?plan=plus&isAnnual=${isAnnual}`)}
+                  onClick={() => {
+                    if (!(user.membership && (user.membership.month == 9.99 || user.membership.annual == 8.9))) {
+                      localStorage.setItem("licenseplan", JSON.stringify("plus"))
+                      localStorage.setItem("isannual", isAnnual)
+                      history.push(`/payment`)
+                    }
+                  }}
+                  disabled={
+                    user?.membership?.name==="Plus"
+                  }
                 >
-                  <Typography textTransform="none" fontwwight={"bold"}>
-                    Start Free Trial
+                  <Typography textTransform="none" fontwwight={"bold"} style={{color:user?.membership?.name==="Plus"?"black": "white"}}>
+                    { !user.membership && "Start Free Trial" }
+                  
+                    {/* { user.membership && (user.membership.month == 9.99 || user.membership.annual == 8.9)  && "Current Plan" } */}
+                    {
+                    user?.membership?.name==="Plus"?"":
+                     user.membership && (user.membership.month < 9.99 || user.membership.annual < 8.9)  && "Upgrade" ||
+                     user.membership && (user.membership.month > 9.99 || user.membership.annual > 8.9)  && "Downgrade" 
+
+                  }
+             {
+        user?.membership?.name==="Plus" && <span style={{display:'inline-flex'}}>   Renew on &nbsp; {moment(user?.renew).format("DD-MM-YYYY") }  </span>
+}
                   </Typography>
                 </Button>
               </Grid>
@@ -516,7 +613,7 @@ function Subscription() {
                 </Grid>
               </Grid>
             </Box>
-            { isAnnual && <>
+            { isAnnual ? <>
             <Grid item>
               <Typography
                 fontSize="16px"
@@ -538,23 +635,58 @@ function Subscription() {
                 You save $109.20
               </Typography>
             </Grid>
-            </> }
+            </> :
+            <div style={{height:'55px'}}>
+            <Grid></Grid>
+            <Grid></Grid>
+            </div>
+            
+            }
             <Grid item display="flex" justifyContent="center" mt={1}>
               <Button
                 sx={{
                   width: "90%",
-                  backgroundColor: "#007fed",
-                  color: "white",
+                  backgroundColor:
+                  user?.membership?.name==="Professional"?"white":
+                  (!user.membership || (user.membership && (user.membership.month < 49.0 || user.membership.annual < 39.9))) && "#5dc26a" ||
+                  user.membership && (user.membership.month > 49.0 || user.membership.annual > 39.9)  && "grey" 
+                  ,
+                  color: user?.membership?.name==="Professional"?"black":"white",
                   fontwwight: "700",
-                  border: "1px solid #007fed",
+                  border:user?.membership?.name==="Professionl"?"1px solid black": "1px solid none",
                   cursor: "pointer",
                   marginTop: "10px",
-                  "&:hover": { backgroundColor: "#007fed" },
+                  "&:hover": { backgroundColor: 
+                    user?.membership?.name==="Professional"?"#007fed":
+                    (!user.membership || (user.membership && (user.membership.month < 49.0 || user.membership.annual < 39.9))) && "#5dc26a" ||
+                    user.membership && (user.membership.month > 49.0 || user.membership.annual > 39.9)  && "grey" 
+                  },
                 }}
-                onClick={() => history.push(`/payment?plan=professional&isAnnual=${isAnnual}`)}
+                // onClick={() => history.push(`/payment?plan=professional&isAnnual=${isAnnual}`)}
+                onClick={() => {
+                  if (!(user.membership && (user.membership.month == 49.0 || user.membership.annual == 39.9))) {
+                    localStorage.setItem("licenseplan", JSON.stringify("professional"))
+                    localStorage.setItem("isannual", isAnnual)
+                    history.push(`/payment`)
+                  }
+                }}
+                disabled={
+                  user?.membership?.name==="Professional"
+                }
               >
-                <Typography textTransform="none" fontwwight={"bold"}>
-                  Upgrade
+                <Typography textTransform="none" fontwwight={"bold"} style={{color:user?.membership?.name==="Professional"?"black": "white",}}>
+                 
+                  {/* { user.membership && (user.membership.month == 49.0 || user.membership.annual == 39.9)  && "Current Plan" } */}
+                  {
+                    user?.membership?.name==="Professional"?"":
+                     (!user.membership || (user.membership && (user.membership.month < 49.0 || user.membership.annual < 39.9))) && "Upgrade" ||
+                     user.membership && (user.membership.month > 49.0 || user.membership.annual > 39.9)  && "Downgrade" 
+
+                  }
+{
+        user?.membership?.name==="Professional" && <span style={{display:'inline-flex'}}>   Renew on &nbsp; {moment(user?.renew).format("DD-MM-YYYY") }  </span>
+}
+                  
                 </Typography>
               </Button>
             </Grid>
@@ -698,7 +830,7 @@ function Subscription() {
                 </Grid>
               </Grid>
             </Box>
-            { isAnnual && <>
+            { isAnnual ? <>
             <Grid item>
               <Typography
                 fontSize="16px"
@@ -720,24 +852,63 @@ function Subscription() {
                 You save $229.20
               </Typography>
             </Grid>
-            </> }
+            </> :
+            <div style={{height:'55px'}}>
+            <Grid></Grid>
+            <Grid></Grid>
+            </div>
+            }
             <Grid item>
               <Grid item display="flex" justifyContent="center" mt={1}>
                 <Button
+                
                   sx={{
                     width: "90%",
-                    backgroundColor: "#007fed",
-                    color: "white",
+                    backgroundColor: 
+                    user?.membership?.name==="Premier"?"white":
+                    (!user.membership || (user.membership && (user.membership.month < 99.0 || user.membership.annual < 79.9))) && "#5dc26a" ||
+                    user.membership && (user.membership.month > 99.0 || user.membership.annual > 79.9)  && "grey" 
+                    
+                    ,
+                   
                     fontwwight: "700",
-                    border: "1px solid #007fed",
+                    border:user?.membership?.name==="Premier"?"2px solid black": "1px solid none",
                     cursor: "pointer",
                     marginTop: "10px",
-                    "&:hover": { backgroundColor: "#007fed" },
+                    "&:hover": { backgroundColor: 
+                      user?.membership?.name==="Premier"?"#007fed":
+                      (!user.membership || (user.membership && (user.membership.month < 99.0 || user.membership.annual < 79.9))) && "#5dc26a" ||
+                      user.membership && (user.membership.month > 99.0 || user.membership.annual > 79.9)  && "grey"
+                    
+                    },
                   }}
-                  onClick={() => history.push(`/payment?plan=premier&isAnnual=${isAnnual}`)}
+                  // onClick={() => history.push(`/payment?plan=premier&isAnnual=${isAnnual}`)}
+                  onClick={() => {
+                    if (!(user.membership && (user.membership.month == 99.0 || user.membership.annual == 79.9))) {
+                      localStorage.setItem("licenseplan", JSON.stringify("premier"))
+                      localStorage.setItem("isannual", isAnnual)
+                      history.push(`/payment`)
+                    }
+                  }}
+                  disabled={
+                    user?.membership?.name==="Premier"
+                  }
                 >
-                  <Typography textTransform="none" fontwwight={"bold"}>
-                    Upgrade
+                  <Typography textTransform="none" fontwwight={"bold"} style={{color:user?.membership?.name==="Premier"?"black":"white"}}>
+                  
+                    {/* { user.membership && (user.membership.month == 99.0 || user.membership.annual == 79.9)  && "Current Plan" } */}
+                    {
+                    user?.membership?.name==="Premier"?" ":
+                    (!user.membership || (user.membership && (user.membership.month < 99.0 || user.membership.annual < 79.9))) && "Upgrade" ||
+                    user.membership && (user.membership.month > 99.0 || user.membership.annual > 79.9)  && "Downgrade" 
+
+                  }
+                     
+
+{
+        user?.membership?.name==="Premier" && <span style={{display:'inline-flex'}}>   Renew on &nbsp; {moment(user?.renew).format("DD-MM-YYYY") }  </span>
+}
+
                   </Typography>
                 </Button>
               </Grid>
@@ -869,6 +1040,17 @@ function Subscription() {
           </Card>
         </Grid>
       </Grid>
+</div>
+    :
+<div style={{display:'flex',alignItems:'center',justifyContent:'center',height:'50%'}}>
+
+  <h1 style={{textAlign:'center'}}>
+    Loading....
+  </h1>
+</div>
+
+   }
+
     </>
   );
 }
