@@ -18,29 +18,16 @@ const UserSchema = new Schema({
     },
     password: {
         type: String,
-        required: true,
     },
     mobile: {
         type: String,
-        required: true,
     },
     gender: {
         type: String,
-        required: true,
     },
     dob: {
         type: Date,
         required: false,
-    },
-    renew: {
-        type: Date,
-        required: false,
-    },
-    type:{
-        type:String
-    },
-    amount:{
-type:Number
     },
     dop: {
         type: Date,
@@ -58,6 +45,6 @@ type:Number
     },
 });
 
-const User = mongoose.model("user", UserSchema);
+const User = mongoose.model("admin", UserSchema);
 
 module.exports = User;

@@ -5,11 +5,11 @@ var logger = require('morgan');
 var mongoose = require('mongoose');
 var passport = require('passport');
 const cors = require('cors')
-
+const dotenv = require('dotenv')
+dotenv.config({ path: './.env' });
 var Membership = require('./models/Membership')
 
 var app = express();
-const stripe = require("stripe")("sk_test_51Mb4lEGKa7QWaBAMCH9S9YqOGsBl8Ws2RS1RpLfdGW1p8S49eMUaDCRhYEbYdeiifVt0kKOsaGwfmmXj3nJcC05V00gEwivLZA");
 
 
 // Login and Register 
@@ -22,18 +22,23 @@ const bookingRoute = require('./routes/routeSelection')
 
 var registerRouter = require('./routes/register');
 var routeMembership = require('./routes/routeMembership');
+var routeTransaction = require('./routes/routeTransaction');
 var routePayment = require('./routes/routePayment');
+var tokenRouter = require('./routes/tokenRouter.js')
+var adminRouter = require('./routes/adminRoutes')
+var getUserRouter = require('./routes/getUserRoutes')
 //--------------------------------------------------------
 
 
+
 //DB Config
-const DB_URL = require('./config/keys').MongoURI;
+// const DB_URL = require('./config/keys').MongoURI;
 
 //connect to mongo
 //---------------------------------------------
-mongoose.connect(DB_URL, {
+mongoose.connect(process.env.MONGOURL, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
 })
     .then(() => {
         console.log("Connected to MongoDB")
@@ -105,6 +110,8 @@ mongoose.connect(DB_URL, {
 //---------------------------------------------
 
 
+console.log(process.env.MONGOURL)
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -115,8 +122,11 @@ app.use('/', login);
 app.use('/booking', bookingRoute);
 app.use('/register', registerRouter);  // To register page 
 app.use('/user', passport.authenticate('jwt', { session: false }), loggedInPage); //To Secure Route
+app.use('/get-user',getUserRouter)
 app.use('/membership', routeMembership);  // To register page 
 app.use('/payment', routePayment)
-
+app.use('/transaction', routeTransaction)
+app.use('/token',tokenRouter)
+app.use('/admin',adminRouter)
 
 module.exports = app;
