@@ -1,9 +1,9 @@
-import React from "react";
-import Card from "react-credit-cards";
-import "./PaymentTab.css";
-import jwt_decode from "jwt-decode";
-import { useParams } from "react-router-dom";
-import constants from "../../constant";
+import React from 'react'
+import Card from 'react-credit-cards'
+import './PaymentTab.css'
+import jwt_decode from 'jwt-decode'
+import { useParams } from 'react-router-dom'
+import constants from '../../constant'
 import axios from 'axios'
 
 import {
@@ -11,9 +11,8 @@ import {
   formatCVC,
   formatExpirationDate,
   formatFormData,
-} from "./utils";
-import "react-credit-cards/es/styles-compiled.css";
-
+} from './utils'
+import 'react-credit-cards/es/styles-compiled.css'
 
 export function updateMembership(userId, name) {
   let apiUrl = `${constants.baseURL}/membership/update`
@@ -24,166 +23,141 @@ export function updateMembership(userId, name) {
 }
 
 export default class App extends React.Component {
-  
   state = {
-    userId: "",
-    number: "",
-    name: "",
-    expiry: "",
-    cvc: "",
-    issuer: "",
-    focused: "",
-    formData: "",
-    token: "",
-    paidDate: "",
-    plan : "None",
-    type : "Monthly",
-    price : 0
-  };
+    userId: '',
+    number: '',
+    name: '',
+    expiry: '',
+    cvc: '',
+    issuer: '',
+    focused: '',
+    formData: '',
+    token: '',
+    paidDate: '',
+    plan: 'None',
+    type: 'Monthly',
+    price: 0,
+  }
 
   componentDidMount() {
-    const tok = sessionStorage.getItem("authToken");
-    const decoded = jwt_decode(tok);
-    const date = new Date();
-    let isAnnual = JSON.parse(localStorage.getItem("isannual"));
-
-    if (isAnnual)
-      this.setState({ type : "Annual" });
-    else
-      this.setState({ type : "Monthly" })
-
-    let currentDate = new Date().toJSON().slice(0, 10);
-
-    let licenseplan = JSON.parse(localStorage.getItem("licenseplan"));
-    console.log(licenseplan, "plan")
-    switch(licenseplan){
-      case "basic":
-        this.setState({ plan : "Basic" });
-        if (isAnnual)
-          this.setState({ price : 54.00 });
-        else
-          this.setState({ price : 4.99 });
-
-        break;
+    const tok = sessionStorage.getItem('authToken')
+    const decoded = jwt_decode(tok)
+    const date = new Date()
+    let isAnnual = JSON.parse(localStorage.getItem('isannual'))
+    if (isAnnual) this.setState({ type: 'Annual' })
+    else this.setState({ type: 'Monthly' })
+    let currentDate = new Date().toJSON().slice(0, 10)
+    let licenseplan = JSON.parse(localStorage.getItem('licenseplan'))
+    console.log(licenseplan, 'plan')
+    switch (licenseplan) {
+      case 'basic':
+        this.setState({ plan: 'Basic' })
+        if (isAnnual) this.setState({ price: 54.0 })
+        else this.setState({ price: 4.99 })
+        break
       default:
-        if (isAnnual)
-          this.setState({ price : 54.00 });
-        else
-          this.setState({ price : 4.99 });
+        if (isAnnual) this.setState({ price: 54.0 })
+        else this.setState({ price: 4.99 })
     }
-
-    this.setState({ token: decoded.doc, name: decoded.doc.name, paidDate : currentDate, userId: decoded.doc._id });
+    this.setState({
+      token: decoded.doc,
+      name: decoded.doc.name,
+      paidDate: currentDate,
+      userId: decoded.doc._id,
+    })
   }
 
   handleCallback = ({ issuer }, isValid) => {
-    if (isValid)
-      this.setState({ issuer });
-  };
+    if (isValid) this.setState({ issuer })
+  }
 
   handleInputFocus = ({ target }) => {
     this.setState({
       focused: target.name,
-    });
-  };
+    })
+  }
 
   handleInputChange = ({ target }) => {
-    if (target.name === "number")
-      target.value = formatCreditCardNumber(target.value);
-    else if (target.name === "expiry")
-      target.value = formatExpirationDate(target.value);
-    else if (target.name === "cvc")
-      target.value = formatCVC(target.value);
+    if (target.name === 'number')
+      target.value = formatCreditCardNumber(target.value)
+    else if (target.name === 'expiry')
+      target.value = formatExpirationDate(target.value)
+    else if (target.name === 'cvc') target.value = formatCVC(target.value)
 
     this.setState({
       [target.name]: target.value,
-    });
-  };
+    })
+  }
 
   handleSubmit = (e) => {
-    e.preventDefault();
-    const { issuer } = this.state;
+    e.preventDefault()
+    const { issuer } = this.state
     const formData = [...e.target.elements]
       .filter((d) => d.name)
       .reduce((acc, d) => {
-        acc[d.name] = d.value;
-        return acc;
-      }, {});
+        acc[d.name] = d.value
+        return acc
+      }, {})
 
-    this.setState({ formData });
-    this.form.reset();
-  };
+    this.setState({ formData })
+    this.form.reset()
+  }
 
   moveToTicketPage = (e) => {
-    e.preventDefault();
-    localStorage.setItem("paymentData", JSON.stringify(this.state.token));
-
-    console.log(this.state.plan)
-
-    updateMembership(this.state.userId, this.state.plan)
-            .then(response => {
-              console.log('ddsdsdsd', response) 
-              // response.data
-            })
-            // .then(data => {
-            //     // let { token } = data
-            //     // sessionStorage.setItem('authToken', token)
-            //     // history.push('/routes')
-            // })
-
-
-
-    // window.location.href = "/getTicket";
-  };
+    e.preventDefault()
+    localStorage.setItem('paymentData', JSON.stringify(this.state.token))
+    updateMembership(this.state.userId, this.state.plan).then((response) => {})
+  }
 
   renderNamesOfPassenger = () => {
-    let passArray = localStorage.getItem("nameData");
+    let passArray = localStorage.getItem('nameData')
     if (passArray) {
-      let nameArray = JSON.parse(passArray);
+      let nameArray = JSON.parse(passArray)
       return nameArray.map((name, idx) => {
-        return <p key={idx}> {name} </p>;
-      });
+        return <p key={idx}> {name} </p>
+      })
     }
-  };
-
-  // renderSeatNumbers = () => {
-  //   let seatArray = localStorage.getItem("reservedSeats");
-  //   if (seatArray) {
-  //     let seaArr = JSON.parse(seatArray);
-  //     return seaArr.map((seat, idx) => {
-  //       return <p key={idx}> {seat} </p>;
-  //     });
-  //   }
-  // };
+  }
 
   getSumTotal = () => {
-    let count = 0;
-    let tax = 100;
-    let seatArray = localStorage.getItem("reservedSeats");
+    let count = 0
+    let tax = 100
+    let seatArray = localStorage.getItem('reservedSeats')
     if (seatArray) {
-      let seaArr = JSON.parse(seatArray);
+      let seaArr = JSON.parse(seatArray)
       for (let i = 0; i < seaArr.length; i++) {
-        count++;
+        count++
       }
       return (
         <div>
           <hr className="hr3" />
-          <p> {1000 * count} </p> <p> +{tax} </p> <p> {1000 * count + tax} </p>{" "}
+          <p> {1000 * count} </p> <p> +{tax} </p> <p> {1000 * count + tax} </p>{' '}
         </div>
-      );
+      )
     }
-  };
-  
-   
+  }
   render() {
-    const { name, number, expiry, cvc, focused, issuer, formData, token, paidDate, type, plan, price } =
-      this.state;
+    const {
+      name,
+      number,
+      expiry,
+      cvc,
+      focused,
+      issuer,
+      formData,
+      token,
+      paidDate,
+      type,
+      plan,
+      price,
+    } = this.state
     const tax = price / 10
     return (
       <div className="paym">
         <div className="row">
           <div key="Payment">
             <div className="App-payment cl-1">
-              <p className="pPayment"> Enter Credit card details </p>{" "}
+              <p className="pPayment"> Enter Credit card details </p>{' '}
               <Card
                 number={number}
                 name={name}
@@ -191,7 +165,7 @@ export default class App extends React.Component {
                 cvc={cvc}
                 focused={focused}
                 callback={this.handleCallback}
-              />{" "}
+              />{' '}
               <form
                 className="credit-form"
                 ref={(c) => (this.form = c)}
@@ -207,8 +181,8 @@ export default class App extends React.Component {
                     required
                     onChange={this.handleInputChange}
                     onFocus={this.handleInputFocus}
-                  />{" "}
-                </div>{" "}
+                  />{' '}
+                </div>{' '}
                 <div className="form-group">
                   <input
                     type="text"
@@ -218,8 +192,8 @@ export default class App extends React.Component {
                     required
                     onChange={this.handleInputChange}
                     onFocus={this.handleInputFocus}
-                  />{" "}
-                </div>{" "}
+                  />{' '}
+                </div>{' '}
                 <div className="form-group">
                   <input
                     type="tel"
@@ -230,8 +204,8 @@ export default class App extends React.Component {
                     required
                     onChange={this.handleInputChange}
                     onFocus={this.handleInputFocus}
-                  />{" "}
-                </div>{" "}
+                  />{' '}
+                </div>{' '}
                 <div className="form-group">
                   <input
                     type="tel"
@@ -242,66 +216,50 @@ export default class App extends React.Component {
                     required
                     onChange={this.handleInputChange}
                     onFocus={this.handleInputFocus}
-                  />{" "}
-                </div>{" "}
-                <input type="hidden" name="issuer" value={issuer} />{" "}
+                  />{' '}
+                </div>{' '}
+                <input type="hidden" name="issuer" value={issuer} />{' '}
                 <div className="">
                   <button
                     onClick={(e) => this.moveToTicketPage(e)}
                     className="btn btn-light btCustom"
                   >
-                    PAY{" "}
-                  </button>{" "}
-                </div>{" "}
-              </form>{" "}
-            </div>{" "}
-          </div>{" "}
+                    PAY{' '}
+                  </button>{' '}
+                </div>{' '}
+              </form>{' '}
+            </div>{' '}
+          </div>{' '}
           <div className="columnTwo">
-            <h3> LetsBuild </h3>{" "}
+            <h3> LetsBuild </h3>{' '}
             <div>
-              <p> BILLING DETAILS </p>{" "}
+              <p> BILLING DETAILS </p>{' '}
               <div className="row">
                 <div className="col-6 pt">
-                  <p className="hdng"> Username </p> 
-                    <hr className="hr3" />
+                  <p className="hdng"> Username </p>
+                  <hr className="hr3" />
                   <p className="hdng"> Date </p>
-                    
                   <p className="hdng"> Plan </p>
-                    <hr className="hr3" /> 
-                  <p className="hdng"> Period </p>{" "}
+                  <hr className="hr3" />
+                  <p className="hdng"> Period </p>{' '}
                   {this.renderNamesOfPassenger()}
-                  <p className="hdng"> Licence Price </p>{" "}
-                  <p className="hdng"> Tax </p> 
-                    <hr className="hr3" />{" "}
-                  <p className="hdng"> Total Sum </p>{" "}
-                </div>{" "}
+                  <p className="hdng"> Licence Price </p>{' '}
+                  <p className="hdng"> Tax </p>
+                  <hr className="hr3" /> <p className="hdng"> Total Sum </p>{' '}
+                </div>{' '}
                 <div className="col-6">
-                  <p className="usrName"> {name} </p>{" "}
-                    <hr className="hr3" />
-                  <p> {paidDate} </p>{" "}
-                  <p> {plan} </p>{" "}
-                    <hr className="hr3" />
-                  <p> {type} </p>{" "}
-                  <p> {price} </p>{" "}
-                  <p> {tax} </p>{" "}
-                    <hr className="hr3" />
-                  <p> {price + tax }</p>{" "}
-                  <p className="usrName"> {localStorage.getItem("start")} </p>{" "}
-                  {/* <p className="usrName">
-                    {" "}
-                    {localStorage.getItem("destination")}{" "}
-                  </p>{" "}
-                  <hr className="hr3" style={{ marginTop: -294 }} />
-                  <hr className="hr3" style={{ marginTop: 105 }} />
-                  <hr className="hr3" style={{ marginTop: 136 }} />
-                  <p className="hdng"> </p> {this.renderSeatNumbers()}{" "}
-                  <p> {this.getSumTotal()} </p> */}
-                </div>{" "}
-              </div>{" "}
-            </div>{" "}
-          </div>{" "}
-        </div>{" "}
+                  <p className="usrName"> {name} </p> <hr className="hr3" />
+                  <p> {paidDate} </p> <p> {plan} </p> <hr className="hr3" />
+                  <p> {type} </p> <p> {price} </p> <p> {tax} </p>{' '}
+                  <hr className="hr3" />
+                  <p> {price + tax}</p>{' '}
+                  <p className="usrName"> {localStorage.getItem('start')} </p>{' '}
+                </div>{' '}
+              </div>{' '}
+            </div>{' '}
+          </div>{' '}
+        </div>{' '}
       </div>
-    );
+    )
   }
 }

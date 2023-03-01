@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { FaAngleDoubleDown } from "react-icons/fa";
 import './Tab.css'
-export default function SeatSelection() {
+const SeatSelection = () => {
     const [name, setName] = useState([])
     const [arrowDown, setArrowDown] = useState(false)
     const [gender, setGender] = useState([])
@@ -282,3 +282,5 @@ export default function SeatSelection() {
 
     )
 }
+
+export default SeatSelection

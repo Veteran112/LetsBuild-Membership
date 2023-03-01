@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./TicketPage.css";
 
-export default function TicketPage({ history }) {
+const TicketPage = ({ history }) => {
   
   const [plan, setPlan] = useState("")
   const [ccType, setCcType] = useState("")
@@ -130,3 +130,5 @@ export default function TicketPage({ history }) {
     </div>
   );
 }
+
+export default TicketPage

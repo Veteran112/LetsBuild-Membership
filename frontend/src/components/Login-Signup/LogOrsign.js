@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import * as logFunc from './loginFunctions.js'
 import './logOrsign.css'
 import { FaFacebookF, FaTwitterSquare } from "react-icons/fa";
-export default function LogOrsign({ history }) {
+const LogOrsign = ({ history }) => {
 
     let [userData, setUserData] = useState({})
 
@@ -77,3 +77,5 @@ export default function LogOrsign({ history }) {
         </div >
     )
 }
+
+export default LogOrsign
