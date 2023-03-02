@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import './Routeselector.css'
 import * as apiCall from './routeApifunc'
 import BusList from '../BusList/BusList'
-const Routeselector = () => {
+export default function Routeselector() {
     const [dataInp, setData] = useState("")
     const [startCity, setStartCity] = useState('')
     const [destination, setDestination] = useState('')
@@ -68,5 +68,3 @@ const Routeselector = () => {
         </div>
     )
 }
-
-export default Routeselector

@@ -1,6 +1,6 @@
 import React from 'react'
 import './homepage.css'
-const Homepage = ({ history }) => {
+export default function Homepage({ history }) {
     const enterSite = e => {
         e.preventDefault()
         history.push('/login')
@@ -44,6 +44,4 @@ const Homepage = ({ history }) => {
     )
 }
 
-
-export default Homepage
 

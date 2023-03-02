@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import './profile.css'
 import jwt_decode from 'jwt-decode'
 
-const Profile = ({ history }) => {
+export default function Profile({ history }) {
 	const [token, setToken] = useState({})
 
 	useEffect(() => {
@@ -66,5 +66,3 @@ const Profile = ({ history }) => {
 		</div>
 	)
 }
-
-export default Profile

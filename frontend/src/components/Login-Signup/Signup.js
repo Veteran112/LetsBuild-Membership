@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import * as signupFunc from "./SignupFunctions";
 import { FaFacebookF, FaTwitterSquare } from "react-icons/fa";
 import "./signup.css";
-const Signup = ({ history }) => {
+export default function Signup({ history }) {
   let [newUser, setnewUser] = useState({});
   const handleChangeEvent = (e, field) => {
     let fieldValue = e.target.value;
@@ -156,5 +156,3 @@ const Signup = ({ history }) => {
     </div>
   );
 }
-
-export default Signup

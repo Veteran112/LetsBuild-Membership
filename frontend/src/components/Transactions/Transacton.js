@@ -18,8 +18,13 @@ function Transacton() {
   const [listItems, setListItems] = useState([]);
 
   const rows=[1]
+
+
+  
   const tok = sessionStorage.getItem('authToken');
   const decoded = jwt_decode(tok);
+
+
 
   const getAllTransaction = () => {
     try {
@@ -91,6 +96,9 @@ function Transacton() {
             )
         }
       )
+
+
+
       setListItems(items);
     })
 	}, [])
@@ -100,6 +108,331 @@ function Transacton() {
     
     <div className="rdc" style={{ height: "700px", backgroundColor: "#fff" }}>
       {listItems}
+
+      {/* <Box
+        display="flex"
+        sx={{ backgroundColor: "#f0f0f0", width: "1110px", height: "100px" }}
+      >
+        <Grid item ml={2}>
+          <Typography
+            color="#0e1724"
+            fontFamily="RobotoHelvetica"
+            fontWeight="bold"
+            mt={3}
+          >
+            7:30 pm
+          </Typography>
+          <Typography
+            color="#0e1724"
+            fontFamily="RobotoHelvetica"
+            fontWeight="bold"
+          >
+            May 06th
+          </Typography>
+          <Typography
+            color="#0e1724"
+            fontFamily="RobotoHelvetica"
+            fontWeight="bold"
+            ml={35}
+            mt={-5}
+          >
+            #909898987
+          </Typography>
+        </Grid>
+        <Grid item>
+          <img
+            src={Visa}
+            style={{ width: "40px", marginLeft: 180, marginTop: 33 }}
+          />
+        </Grid>
+        <Grid item>
+          <Typography
+            color="#0e1724"
+            fontFamily="RobotoHelvetica"
+            fontWeight="bold"
+            ml={20}
+            mt={4}
+          >
+            $65.02
+          </Typography>
+        </Grid>
+        <Grid item>
+          <img
+            src={Done2}
+            style={{ width: "40px", marginLeft: 210, marginTop: 33 }}
+          />
+        </Grid>
+      </Box>
+      <Box
+        display="flex"
+        sx={{ backgroundColor: "#fff", width: "1110px", height: "100px" }}
+      >
+        <Grid item ml={2}>
+          <Typography
+            color="#0e1724"
+            fontFamily="RobotoHelvetica"
+            fontWeight="bold"
+            mt={3}
+          >
+            7:30 pm
+          </Typography>
+          <Typography
+            color="#0e1724"
+            fontFamily="RobotoHelvetica"
+            fontWeight="bold"
+          >
+            May 06th
+          </Typography>
+          <Typography
+            color="#0e1724"
+            fontFamily="RobotoHelvetica"
+            fontWeight="bold"
+            ml={35}
+            mt={-5}
+          >
+            #909898987
+          </Typography>
+        </Grid>
+        <Grid item>
+          <img
+            src={Cash}
+            style={{ width: "40px", marginLeft: 180, marginTop: 33 }}
+          />
+        </Grid>
+        <Grid item>
+          <Typography
+            color="#0e1724"
+            fontFamily="RobotoHelvetica"
+            fontWeight="bold"
+            ml={20}
+            mt={4}
+          >
+            $65.02
+          </Typography>
+        </Grid>
+        <Grid item>
+          <img
+            src={Done}
+            style={{ width: "40px", marginLeft: 210, marginTop: 33 }}
+          />
+        </Grid>
+      </Box>
+      <Box
+        display="flex"
+        sx={{ backgroundColor: "#f0f0f0", width: "1110px", height: "100px" }}
+      >
+        <Grid item ml={2}>
+          <Typography
+            color="#0e1724"
+            fontFamily="RobotoHelvetica"
+            fontWeight="bold"
+            mt={3}
+          >
+            7:30 pm
+          </Typography>
+          <Typography
+            color="#0e1724"
+            fontFamily="RobotoHelvetica"
+            fontWeight="bold"
+          >
+            May 06th
+          </Typography>
+          <Typography
+            color="#0e1724"
+            fontFamily="RobotoHelvetica"
+            fontWeight="bold"
+            ml={35}
+            mt={-5}
+          >
+            #909898987
+          </Typography>
+        </Grid>
+        <Grid item>
+          <img
+            src={Visa}
+            style={{ width: "40px", marginLeft: 180, marginTop: 33 }}
+          />
+        </Grid>
+        <Grid item>
+          <Typography
+            color="#0e1724"
+            fontFamily="RobotoHelvetica"
+            fontWeight="bold"
+            ml={20}
+            mt={4}
+          >
+            $65.02
+          </Typography>
+        </Grid>
+        <Grid item>
+          <img
+            src={Done2}
+            style={{ width: "40px", marginLeft: 210, marginTop: 33 }}
+          />
+        </Grid>
+      </Box>
+      <Box
+        display="flex"
+        sx={{ backgroundColor: "#fff", width: "1110px", height: "100px" }}
+      >
+        <Grid item ml={2}>
+          <Typography
+            color="#0e1724"
+            fontFamily="RobotoHelvetica"
+            fontWeight="bold"
+            mt={3}
+          >
+            7:30 pm
+          </Typography>
+          <Typography
+            color="#0e1724"
+            fontFamily="RobotoHelvetica"
+            fontWeight="bold"
+          >
+            May 06th
+          </Typography>
+          <Typography
+            color="#0e1724"
+            fontFamily="RobotoHelvetica"
+            fontWeight="bold"
+            ml={35}
+            mt={-5}
+          >
+            #909898987
+          </Typography>
+        </Grid>
+        <Grid item>
+          <img
+            src={Cash}
+            style={{ width: "40px", marginLeft: 180, marginTop: 33 }}
+          />
+        </Grid>
+        <Grid item>
+          <Typography
+            color="#0e1724"
+            fontFamily="RobotoHelvetica"
+            fontWeight="bold"
+            ml={20}
+            mt={4}
+          >
+            $65.02
+          </Typography>
+        </Grid>
+        <Grid item>
+          <img
+            src={Done}
+            style={{ width: "40px", marginLeft: 210, marginTop: 33 }}
+          />
+        </Grid>
+      </Box>
+      <Box
+        display="flex"
+        sx={{ backgroundColor: "#f0f0f0", width: "1110px", height: "100px" }}
+      >
+        <Grid item ml={2}>
+          <Typography
+            color="#0e1724"
+            fontFamily="RobotoHelvetica"
+            fontWeight="bold"
+            mt={3}
+          >
+            7:30 pm
+          </Typography>
+          <Typography
+            color="#0e1724"
+            fontFamily="RobotoHelvetica"
+            fontWeight="bold"
+          >
+            May 06th
+          </Typography>
+          <Typography
+            color="#0e1724"
+            fontFamily="RobotoHelvetica"
+            fontWeight="bold"
+            ml={35}
+            mt={-5}
+          >
+            #909898987
+          </Typography>
+        </Grid>
+        <Grid item>
+          <img
+            src={Visa}
+            style={{ width: "40px", marginLeft: 180, marginTop: 33 }}
+          />
+        </Grid>
+        <Grid item>
+          <Typography
+            color="#0e1724"
+            fontFamily="RobotoHelvetica"
+            fontWeight="bold"
+            ml={20}
+            mt={4}
+          >
+            $65.02
+          </Typography>
+        </Grid>
+        <Grid item>
+          <img
+            src={Done2}
+            style={{ width: "40px", marginLeft: 210, marginTop: 33 }}
+          />
+        </Grid>
+      </Box>
+      <Box
+        display="flex"
+        sx={{ backgroundColor: "#fff", width: "1110px", height: "100px" }}
+      >
+        <Grid item ml={2}>
+          <Typography
+            color="#0e1724"
+            fontFamily="RobotoHelvetica"
+            fontWeight="bold"
+            mt={3}
+          >
+            7:30 pm
+          </Typography>
+          <Typography
+            color="#0e1724"
+            fontFamily="RobotoHelvetica"
+            fontWeight="bold"
+          >
+            May 06th
+          </Typography>
+          <Typography
+            color="#0e1724"
+            fontFamily="RobotoHelvetica"
+            fontWeight="bold"
+            ml={35}
+            mt={-5}
+          >
+            #909898987
+          </Typography>
+        </Grid>
+        <Grid item>
+          <img
+            src={Cash}
+            style={{ width: "40px", marginLeft: 180, marginTop: 33 }}
+          />
+        </Grid>
+        <Grid item>
+          <Typography
+            color="#0e1724"
+            fontFamily="RobotoHelvetica"
+            fontWeight="bold"
+            ml={20}
+            mt={4}
+          >
+            $65.02
+          </Typography>
+        </Grid>
+        <Grid item>
+          <img
+            src={Done}
+            style={{ width: "40px", marginLeft: 210, marginTop: 33 }}
+          />
+        </Grid>
+      </Box> */}
     </div>
     </Grid>
   );
